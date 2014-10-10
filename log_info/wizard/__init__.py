@@ -1,1 +1,1 @@
-import log_info
+from . import log_info
