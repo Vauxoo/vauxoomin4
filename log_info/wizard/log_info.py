@@ -32,6 +32,7 @@ WARNING = '.*WARNING '
 PYTHON = '.*File '
 TEST = '.*TEST'
 
+
 class info_log_server(osv.TransientModel):
 
     '''Show info by branch and you can do pull from here'''
@@ -40,15 +41,15 @@ class info_log_server(osv.TransientModel):
 
     def RenderThings(self, Data):
         module_path = modules.get_module_path('log_info')
-        templateLoader = jinja2.FileSystemLoader( searchpath="%s/static/src/xml" % module_path )
-        templateEnv = jinja2.Environment( loader=templateLoader,
-                extensions=['jinja2.ext.autoescape'] )
+        templateLoader = jinja2.FileSystemLoader(searchpath="%s/static/src/xml" % module_path)
+        templateEnv = jinja2.Environment(loader=templateLoader,
+                extensions=['jinja2.ext.autoescape'])
         templateEnv.globals['len'] = len
         TEMPLATE_FILE = "original_template.xml"
-        template = templateEnv.get_template( TEMPLATE_FILE )
-        outputText = template.render(warnings = Data[3],
-            infos = Data[2], pythons = Data[1],
-            tests = Data[4], errors = Data[0])
+        template = templateEnv.get_template(TEMPLATE_FILE)
+        outputText = template.render(warnings=Data[3],
+            infos=Data[2], pythons=Data[1],
+            tests=Data[4], errors=Data[0])
         open('%s/static/src/xml/log_info.xml' % module_path, 'w').write(outputText)
         return True
 
@@ -86,7 +87,7 @@ class info_log_server(osv.TransientModel):
         if context is None:
             context = {}
         res = super(info_log_server, self).default_get(cr, uid, fields, context=context)
-        log_file = openerp.tools.config.options.get('logfile',False)
+        log_file = openerp.tools.config.options.get('logfile', False)
         if log_file:
             result = self.Parselog(log_file)
             self.RenderThings(result)
@@ -98,7 +99,7 @@ class info_log_server(osv.TransientModel):
         return res
 
     _columns = {
-            'name':fields.boolean('Dummy', help='Dummy Field'),
+        'name': fields.boolean('Dummy', help='Dummy Field'),
 
 
-            }
+    }
