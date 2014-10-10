@@ -278,7 +278,6 @@ class branch_info_line(osv.osv_memory):
         if context is None:
             context = {}
 
-        openerp.conf.addons_paths
         r = False
         b = False
         w = False
