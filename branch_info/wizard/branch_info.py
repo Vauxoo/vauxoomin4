@@ -220,9 +220,6 @@ class branch_info_line(osv.osv_memory):
     def show_log(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        r = False
-        b = False
-        w = False
         line_brw = ids and self.browse(cr, uid, ids[0], context=context)
         st = os.popen('bzr log -l 5 --show-ids --include-merged %s/'
                       % (line_brw and
@@ -253,9 +250,6 @@ class branch_info_line(osv.osv_memory):
     def show_modules(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        r = False
-        b = False
-        w = False
         line_brw = ids and self.browse(cr, uid, ids[0], context=context)
         res = {
             'logs': '\n'.join([i for i in os.listdir(line_brw.path)\
@@ -287,11 +281,10 @@ class branch_info_line(osv.osv_memory):
         if context is None:
             context = {}
 
-        addons_path = openerp.conf.addons_paths
+        openerp.conf.addons_paths
         r = False
         b = False
         w = False
-        lines = []
         
         line_brw = ids and self.browse(cr, uid, ids[0], context=context)
         try:
