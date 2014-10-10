@@ -19,16 +19,12 @@
 #
 ##############################################################################
 
-from openerp import modules, pooler, tools, addons
+from openerp import modules
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 import openerp
-import os
-import commands
 import re
-import sys
 import jinja2
-from pprint import pprint
 
 INFO = '.*INFO '
 ERROR = '.*ERROR '

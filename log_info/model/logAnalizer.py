@@ -19,14 +19,7 @@
 #
 ##############################################################################
 
-from openerp import tools
-from openerp.osv import osv
-from openerp.osv import fields
-from openerp.tools.translate import _
-import openerp
-import os
-import commands
-from bzrlib import repository,  branch,  workingtree,  info, status, log
+from openerp.osv import osv, fields
 
 
 class branch_info_line(osv.osv_memory):
