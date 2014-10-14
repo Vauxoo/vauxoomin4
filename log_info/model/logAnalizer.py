@@ -19,14 +19,7 @@
 #
 ##############################################################################
 
-from openerp import tools
-from openerp.osv import osv
-from openerp.osv import fields
-from openerp.tools.translate import _
-import openerp
-import os
-import commands
-from bzrlib import repository,  branch,  workingtree,  info, status, log
+from openerp.osv import osv, fields
 
 
 class branch_info_line(osv.osv_memory):
@@ -45,13 +38,12 @@ class branch_info_line(osv.osv_memory):
                               'branch from get pull'),
         'revno': fields.integer('Revno', help='Branch revno'),
         'name': fields.char('Name', 20, help='Branch Name'),
-        'st':fields.selection([('ok','Commited'),('notb','Not Branch'),
-                               ('uncommited','Uncommited')],
+        'st': fields.selection([('ok', 'Commited'), ('notb', 'Not Branch'),
+                               ('uncommited', 'Uncommited')],
                                help='True if this branch have diff '
-                             'without commiter'), 
-        'color':fields.function(_get_color, method=True,
-                                string='Color',type='integer',
-                                help='Color used in kanban view'), 
+                             'without commiter'),
+        'color': fields.function(_get_color, method=True,
+                                string='Color', type='integer',
+                                help='Color used in kanban view'),
 
     }
-    

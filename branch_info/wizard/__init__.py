@@ -1,1 +1,1 @@
-import branch_info
+from . import branch_info

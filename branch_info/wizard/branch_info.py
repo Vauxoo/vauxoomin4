@@ -19,14 +19,14 @@
 #
 ##############################################################################
 
-from openerp import tools
-from openerp.osv import osv
-from openerp.osv import fields
-from openerp.tools.translate import _
+from openerp.osv import osv, fields
 import openerp
 import os
 import commands
-from bzrlib import repository,  branch,  workingtree,  info, status, log
+from bzrlib import branch
+from bzrlib import workingtree
+from bzrlib import repository
+from bzrlib import status
 
 
 class branch_info_line(osv.osv_memory):
@@ -34,20 +34,21 @@ class branch_info_line(osv.osv_memory):
     '''Show info by branch and you can do pull from here'''
 
     _name = 'branch.info.line'
+
     def _get_color(self, cr, uid, ids, name, arg, context=None):
         if context is None:
             context = {}
         color = {
-                'ok':5,
-                'notb':2,
-                'uncommited':7
-                }
+            'ok': 5,
+            'notb': 2,
+            'uncommited': 7
+        }
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
-            res.update({line.id:color.get(line.st,0)})
-        
+            res.update({line.id: color.get(line.st, 0)})
+
         return res
-    
+
     def is_branch(self, cr, uid, ids, path, context=None):
         ''' Check if any path is a branch
             return branch path or False if not a branch'''
@@ -74,7 +75,7 @@ class branch_info_line(osv.osv_memory):
         addons_path = openerp.conf.addons_paths
         line_ids = self.search(cr, uid, [], context=context)
         line_ids and self.unlink(cr, uid, line_ids, context=context)
-        
+
         msg = '''
         <table border border="1">
 
@@ -104,8 +105,8 @@ class branch_info_line(osv.osv_memory):
                 parent = b.get_parent()
                 revd = b.last_revision_info()[1]
                 st = commands.getoutput('cat /tmp/status').strip() and \
-                                                                  'uncommited'\
-                                                                       or 'ok'
+                    'uncommited'\
+                    or 'ok'
                 msg = msg + '''\n
                         <tr>
                         <td>%s</td>
@@ -142,7 +143,7 @@ class branch_info_line(osv.osv_memory):
                                      'revno': revno,
                                      'st': st,
                                      'path': path
-                                     })
+                                      })
 
         msg = msg + '''\n
                    </tr>
@@ -185,17 +186,15 @@ class branch_info_line(osv.osv_memory):
                               'branch from get pull'),
         'revno': fields.integer('Revno', help='Branch revno'),
         'name': fields.char('Name', 20, help='Branch Name'),
-        'st':fields.selection([('ok','Commited'),('notb','Not Branch'),
-                               ('uncommited','Uncommited')],
+        'st': fields.selection([('ok', 'Commited'), ('notb', 'Not Branch'),
+                               ('uncommited', 'Uncommited')],
                                help='True if this branch have diff '
-                             'without commiter'), 
-        'color':fields.function(_get_color, method=True,
-                                string='Color',type='integer',
-                                help='Color used in kanban view'), 
+                             'without commiter'),
+        'color': fields.function(_get_color, method=True,
+                                string='Color', type='integer',
+                                help='Color used in kanban view'),
 
     }
-    
-    
 
     def back_windows(self, cr, uid, ids, context=None):
         if context is None:
@@ -215,14 +214,11 @@ class branch_info_line(osv.osv_memory):
             'views': [(resource_id, 'kanban')],
             'type': 'ir.actions.act_window',
             'context': {'hide_breadcrumb': True, 'stop': True},
-            }
+        }
 
     def show_log(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        r = False
-        b = False
-        w = False
         line_brw = ids and self.browse(cr, uid, ids[0], context=context)
         st = os.popen('bzr log -l 5 --show-ids --include-merged %s/'
                       % (line_brw and
@@ -249,19 +245,15 @@ class branch_info_line(osv.osv_memory):
             'context': context,
         }
 
-
     def show_modules(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        r = False
-        b = False
-        w = False
         line_brw = ids and self.browse(cr, uid, ids[0], context=context)
         res = {
-            'logs': '\n'.join([i for i in os.listdir(line_brw.path)\
-                                if not i.startswith('.') and \
-                                    os.path.isdir('%s/%s' %\
-                                                         (line_brw.path, i))]),
+            'logs': '\n'.join([i for i in os.listdir(line_brw.path)
+                               if not i.startswith('.') and
+                               os.path.isdir('%s/%s' %
+                                                  (line_brw.path, i))]),
         }
         res_ids = self.create(cr, uid, res)
         obj_model = self.pool.get('ir.model.data')
@@ -282,17 +274,14 @@ class branch_info_line(osv.osv_memory):
             'context': context,
         }
 
-
     def show_ch(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
 
-        addons_path = openerp.conf.addons_paths
         r = False
         b = False
         w = False
-        lines = []
-        
+
         line_brw = ids and self.browse(cr, uid, ids[0], context=context)
         try:
             r = repository.Repository.open(line_brw and line_brw.path)
@@ -324,4 +313,3 @@ class branch_info_line(osv.osv_memory):
             'res_id': res_ids,
             'context': context,
         }
-

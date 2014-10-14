@@ -1,1 +1,1 @@
-import logAnalizer
+from . import logAnalizer
